@@ -2255,8 +2255,7 @@ h1, h2, h3, h4, h5, h6 {
 													</div>
 												</div>
 
-												<div class="col-3">
-													<!-- Item post -->	
+												<div class="col-3">													<!-- Item post -->	
 													<div>
 														<a href="blog-detail-01.html" class="wrap-pic-w hov1 trans-03">
 															<img src="{% static 'front/images/post-34.jpg' %}" alt="IMG">
@@ -2358,7 +2357,7 @@ h1, h2, h3, h4, h5, h6 {
                     <div class="col-lg-3 col-md-6">
                         <div class="f_widget company_widget wow fadeInLeft" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInLeft;">
                             <h3 class="f-title f_600 t_color f_size_18">Extraction from Main models</h3>
-                            <p>{{sitename.about}}</p>
+                            <p>{{site.about}}</p>
                                 
                         </div>
                     </div>
@@ -2396,6 +2395,10 @@ h1, h2, h3, h4, h5, h6 {
                                 <a href="{{site.tw}}" class="fab fa-twitter"></a>
                                 <a href="{{site.yt}}" class="fab fa-youtube"></a>
                             </div>
+                        </div><br>
+                        <div class="f_widget social-widget pl_70 wow fadeInLeft" data-wow-delay="0.8s" style="visibility: visible; animation-delay: 0.8s; animation-name: fadeInLeft;">
+                            <h3 class="f-title f_600 t_color f_size_18">Tel: {{site.tel}}</h3>
+                            
                         </div>
                     </div>
                 </div>
@@ -2407,7 +2410,7 @@ h1, h2, h3, h4, h5, h6 {
         </div>
         <br>
             <div class="d-flex justify-content-center">
-                <p class="center"> © Dominic Catana - 2020</p>
+                <p class="center"> © Dominic Catana - 2020</p><a href="{{site.link}}">&nbsp; News of Tech </a>
             </div>
             <br>
     </footer>
