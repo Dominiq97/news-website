@@ -29,6 +29,7 @@
                 <tr>
                     <th class="text-center">ID</th>
                     <th class="text-center">Image</th>
+                    <th>Title</th>
                     <th>Date</th>
                     <th>Category</th>
                     <th>Writer</th>
@@ -37,13 +38,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-center">1</td>
+                {% for n in news%}
+                <tr>               
+                    <td class="text-center">{{n.pk}}</td>
                     <td class="text-center"><img src="{% static 'back/img/placeholders/avatars/avatar15.jpg' %}" alt="avatar" class="img-circle"></td>
-                    <td>20/02/2020</td>
-                    <td>Sport</td>
-                    <td>Admin</td>
-                    <td><span class="label label-info">100</span></td>
+                    <td>{{n.name}}</td>
+                    <td>{{n.date}}</td>
+                    <td>-</td>
+                    <td>{{n.writer}}</td>
+                    <td><span class="label label-info">-</span></td>
                     <td class="text-center">
                         <div class="btn-group">
                             <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil">Edit</i></a>
@@ -51,6 +54,7 @@
                         </div>
                     </td>
                 </tr>
+                {% endfor %}
         
             </tbody>
         </table>
