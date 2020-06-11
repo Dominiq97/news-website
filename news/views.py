@@ -14,6 +14,12 @@ def news_list(request):
     return render(request, 'back/news_list.html',{'news':news})
 
 def news_add(request):
+    if request.method == 'POST':
+        newstitle = request.POST.get('newstitle')
+        newscategory = request.POST.get('newscategory')
+        newssummary = request.POST.get('newssummary')
+        newsbody = request.POST.get('newsbody')
+        print(newstitle," ",newscategory," ",newssummary," ",newsbody)
     return render(request, 'back/news_add.html')
 
 
