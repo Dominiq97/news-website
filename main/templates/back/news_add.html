@@ -29,7 +29,7 @@
 
             <!-- Basic Form Elements Content -->
             <form action="{% url 'news_add' %}" method="POST" enctype="multipart/form-data" class="form-horizontal form-bordered">
-
+                {% csrf_token %}
                 <div class="form-group">
                     <div class="col-md-6">
                         <input type="text" id="newstitle" name="newstitle" class="form-control" placeholder="News Title">
