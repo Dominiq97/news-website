@@ -9,4 +9,7 @@ def news_detail(request,pk):
     news = News.objects.filter(pk=pk)
     return render(request, 'front/news_detail.html',{'site':site,'news':news})
 
+def news_list(request):
+    return render(request, 'back/news_list.html')
+
 
