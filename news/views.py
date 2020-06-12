@@ -77,6 +77,8 @@ def news_add(request):
                     return render(request,'back/error.html',{'error':error})
             
             else:
+                fs = FileSystemStorage()
+                fs.delete(filename)
                 error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
 
@@ -88,8 +90,17 @@ def news_add(request):
 
 def news_delete(request,pk):
 
-    news_deleted = News.objects.get(pk=pk)
-    news_deleted.delete()
+    try:
+
+        news_deleted = News.objects.get(pk=pk)
+        fs = FileSystemStorage()
+        fs.delete(news_deleted.picname)
+        news_deleted.delete()
+    except:
+        error = "Something Wrong"
+        return render(request,'back/error.html',{'error':error})
+
+
     return redirect('news_list')
 
 
