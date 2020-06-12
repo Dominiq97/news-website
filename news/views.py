@@ -86,6 +86,10 @@ def news_add(request):
 
     return render(request, 'back/news_add.html')
 
+def news_delete(request,pk):
 
+    news_deleted = News.objects.get(pk=pk)
+    news_deleted.delete()
+    return redirect('news_list')
 
 
