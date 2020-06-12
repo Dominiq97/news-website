@@ -29,7 +29,7 @@
                     <th class="text-center">ID</th>
                     <th class="text-center">Image</th>
                     <th>Title</th>
-                    <th>Date</th>
+                    <th>Date & Time</th>
                     <th>Category</th>
                     <th>Writer</th>
                     <th>Views</th>
@@ -42,7 +42,7 @@
                     <td class="text-center">{{n.pk}}</td>
                     <td class="text-center"><img style="display:inline-block;width:70px;height:50px" src="{{n.picurl}}" alt="avatar" ></td>
                     <td>{{n.name}}</td>
-                    <td>{{n.date}}</td>
+                    <td>{{n.date}} | {{n.time}}</td>
                     <td>{{n.category}}</td>
                     <td>{{n.writer}}</td>
                     <td><span class="label label-info">{{n.show}}</span></td>
