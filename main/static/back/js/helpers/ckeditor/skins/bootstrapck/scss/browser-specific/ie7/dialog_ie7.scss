@@ -16,7 +16,7 @@ This file contains styles to used by Internet Explorer 7 only.
 .cke_dialog_title
 {
     /* gradient fix */
-    zoom: 1;
+    transform: scale(1);
 }
 
 .cke_dialog_footer
