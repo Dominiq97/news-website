@@ -30,7 +30,7 @@ var CompMaps = function() {
                 div: '#gmap-terrain',
                 lat: 0,
                 lng: 0,
-                zoom: 1,
+                transform: scale(1),
                 scrollwheel: false
             }).setMapTypeId(google.maps.MapTypeId.TERRAIN);
 
@@ -38,7 +38,7 @@ var CompMaps = function() {
             new GMaps({
                 div: '#gmap-satellite',
                 lat: 0,
-                lng: 0,zoom: 1,
+                lng: 0,transform: scale(1),
                 scrollwheel: false
             }).setMapTypeId(google.maps.MapTypeId.SATELLITE);
 

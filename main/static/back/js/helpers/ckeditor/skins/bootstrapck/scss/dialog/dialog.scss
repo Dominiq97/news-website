@@ -460,7 +460,7 @@ The buttons used in the dialog footer or inside the contents.
 a.cke_dialog_ui_button {
     display: inline-block;
     *display: inline;
-    *zoom: 1;
+    *transform: scale(1);
 
     padding: 3px 0;
     margin: 0;
