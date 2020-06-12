@@ -40,7 +40,7 @@
                 {% for n in news%}
                 <tr>               
                     <td class="text-center">{{n.pk}}</td>
-                    <td class="text-center"><img src="{% static 'back/img/placeholders/avatars/avatar15.jpg' %}" alt="avatar" class="img-circle"></td>
+                    <td class="text-center"><img style="display:inline-block;width:70px;height:50px" src="{{n.picurl}}" alt="avatar" ></td>
                     <td>{{n.name}}</td>
                     <td>{{n.date}}</td>
                     <td>{{n.category}}</td>
