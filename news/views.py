@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import News
 from main.models import Main
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
@@ -24,11 +25,16 @@ def news_add(request):
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
             
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        url = fs.url(filename)
+
         news_added = News(name=newstitle, 
         summary=newssummary, 
         body=newsbody, 
         date="2020/2/2", 
-        pic="-", 
+        pic=url, 
         writer="-",
         category=newscategory,
         category_id=0,
