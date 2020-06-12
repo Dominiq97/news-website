@@ -24,25 +24,41 @@ def news_add(request):
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-            
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        url = fs.url(filename)
 
-        news_added = News(name=newstitle, 
-        summary=newssummary, 
-        body=newsbody, 
-        date="2020/2/2", 
-        picname=filename,
-        picurl=url, 
-        writer="-",
-        category=newscategory,
-        category_id=0,
-        show=0
-        )
-        news_added.save()
-        return redirect('news_list')
+        try:    
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            url = fs.url(filename)
+
+            if str(myfile.content_type).startswith("image"):
+
+                if (myfile.size < 5000000):
+
+                    news_added = News(name=newstitle, 
+                summary=newssummary, 
+                body=newsbody, 
+                date="2020/2/2", 
+                picname=filename,
+                picurl=url, 
+                writer="-",
+                category=newscategory,
+                category_id=0,
+                show=0
+                )
+                    news_added.save()
+                    return redirect('news_list')
+                else:
+                    error: "Your file is bigger than 5 Mb"
+                    return render(request,'back/error.html',{'error':error})
+            
+            else:
+                error = "Your file not supported"
+                return render(request,'back/error.html',{'error':error})
+
+        except:
+            error = "Please input your image"
+            return render(request,'back/error.html',{'error':error})
 
     return render(request, 'back/news_add.html')
 
