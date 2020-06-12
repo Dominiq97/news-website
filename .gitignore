@@ -16,4 +16,5 @@ tests/report/
 # Pentru virtualenv:
 bin
 lib
+include
 pyvenv.cfg
