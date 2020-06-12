@@ -23,12 +23,14 @@ pip install -r requirements.txt
 source bin/activate
 ```
 
-- rulam migrate pt a popula baza de date cu "models"
-```bash
-python manage.py migrate
-```
-
 - runserver
 ```bash
 python manage.py runserver
+```
+
+## Nota:
+Daca nu avem la dispozitie si baza de date (sqlite sau PostgreSQL):
+- rulam migrate pt a popula baza de date cu "models"
+```bash
+python manage.py migrate
 ```
