@@ -7,6 +7,7 @@ class News(models.Model):
     summary = models.TextField()
     body = models.TextField()
     date = models.CharField(max_length=12,default="//")
+    time = models.CharField(max_length=12,default="00:00") 
     picname = models.TextField()
     picurl = models.TextField(default="-")
     writer = models.CharField(max_length=50)
