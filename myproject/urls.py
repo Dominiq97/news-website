@@ -22,7 +22,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'',include('main.urls')),
     url(r'',include('news.urls')),
+    url(r'',include('category.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
