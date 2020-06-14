@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import SubCategory
-
+from category.models import Category
 # Create your views here.
 
 def subcategory_list(request):
@@ -8,15 +8,20 @@ def subcategory_list(request):
     return render(request,'back/subcategory_list.html',{'subcategory':subcategory})
 
 def subcategory_add(request):
+    category = Category.objects.all()
     if request.method =='POST':
-        catname=request.POST.get('catname')
-        if catname == "":
+        name = request.POST.get('subcatname')
+        catid=request.POST.get('category')
+        if name == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-        if len(SubCategory.objects.filter(name=catname)) != 0 :
+        if len(SubCategory.objects.filter(name=name)) != 0 :
             error = "This Name Used Before!"
             return render(request,'back/error.html',{'error':error})
-        
+        catname = Category.objects.get(pk=catid).name
+        subcat = SubCategory(name=name,catname=catname,catid=catid)
+        subcat.save()
+        return redirect('subcategory_list')
 
 
-    return render(request,'back/subcategory_add.html')
+    return render(request,'back/subcategory_add.html',{'category':category})
