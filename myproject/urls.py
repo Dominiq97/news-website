@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'',include('main.urls')),
     url(r'',include('news.urls')),
     url(r'',include('category.urls')),
+    url(r'',include('subcategory.urls')),
 ]
 
 if settings.DEBUG:
