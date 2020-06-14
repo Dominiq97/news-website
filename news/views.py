@@ -3,6 +3,8 @@ from .models import News
 from main.models import Main
 from django.core.files.storage import FileSystemStorage
 import datetime 
+from subcategory.models import SubCategory
+from category.models import Category
 
 # Create your views here.
 
@@ -36,13 +38,14 @@ def news_add(request):
 
     time = str(hour) + ":" + str(minute)
 
-
+    category = SubCategory.objects.all()
 
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('newsbody')
+        newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
@@ -57,7 +60,7 @@ def news_add(request):
             if str(myfile.content_type).startswith("image"):
 
                 if (myfile.size < 5000000):
-
+                    newsname=SubCategory.objects.get(pk=newsid).name
                     news_added = News(name=newstitle, 
                 summary=newssummary, 
                 body=newsbody, 
@@ -66,8 +69,8 @@ def news_add(request):
                 picname=filename,
                 picurl=url, 
                 writer="-",
-                category=newscategory,
-                category_id=0,
+                category=newsname,
+                category_id=newsid,
                 show=0
                 )
                     news_added.save()
@@ -86,7 +89,7 @@ def news_add(request):
             error = "Please input your image"
             return render(request,'back/error.html',{'error':error})
 
-    return render(request, 'back/news_add.html')
+    return render(request, 'back/news_add.html',{'category':category})
 
 def news_delete(request,pk):
 
@@ -103,4 +106,8 @@ def news_delete(request,pk):
 
     return redirect('news_list')
 
+def news_edit(request,pk):
 
+    news = News.objects.get(pk=pk)
+    category = SubCategory.objects.all()
+    return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
