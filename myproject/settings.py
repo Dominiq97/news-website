@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'news',
     'category',
     'subcategory',
-#    'martor',
+    'martor',
 ]
 
 MIDDLEWARE = [

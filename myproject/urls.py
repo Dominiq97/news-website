@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'',include('news.urls')),
     url(r'',include('category.urls')),
     url(r'',include('subcategory.urls')),
-#    url(r'^martor/', include('martor.urls')),
+    url(r'^martor/', include('martor.urls')),
 ]
 
 if settings.DEBUG:
