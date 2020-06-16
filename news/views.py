@@ -5,6 +5,21 @@ from django.core.files.storage import FileSystemStorage
 import datetime 
 from subcategory.models import SubCategory
 from category.models import Category
+from .forms import (SimpleForm, PostForm)
+
+import os
+import json
+import uuid
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+from martor.utils import LazyEncoder
+
 
 # Create your views here.
 
@@ -18,7 +33,9 @@ def news_list(request):
     return render(request, 'back/news_list.html',{'news':news})
 
 def news_add(request):
-
+    
+    
+    
     now = datetime.datetime.now()
     year =  now.year
     day = now.day
@@ -39,15 +56,16 @@ def news_add(request):
     time = str(hour) + ":" + str(minute)
 
     category = SubCategory.objects.all()
-
+    form = SimpleForm()
+    context = {'form': form, 'title': 'Simple Form','category':category}
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('description')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
+        if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
 
@@ -56,6 +74,7 @@ def news_add(request):
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
             url = fs.url(filename)
+            print(myfile)
 
             if str(myfile.content_type).startswith("image"):
 
@@ -85,11 +104,12 @@ def news_add(request):
                 error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
 
-        except:
+        except Exception as e:
             error = "Please input your image"
+            error = e
             return render(request,'back/error.html',{'error':error})
 
-    return render(request, 'back/news_add.html',{'category':category})
+    return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
 
