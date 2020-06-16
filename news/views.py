@@ -5,6 +5,9 @@ from django.core.files.storage import FileSystemStorage
 import datetime 
 from subcategory.models import SubCategory
 from category.models import Category
+from django import template
+from django.utils.safestring import mark_safe
+from markdownx.utils import markdownify
 
 # Create your views here.
 
@@ -44,7 +47,7 @@ def news_add(request):
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
@@ -111,3 +114,7 @@ def news_edit(request,pk):
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
+
+
+
+

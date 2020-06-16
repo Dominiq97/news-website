@@ -1,4 +1,5 @@
 from markdownx.fields import MarkdownxFormField
+from django import forms
 
-class Body(forms.Form):
+class ForumThreadForm(forms.Form):
     body = MarkdownxFormField()

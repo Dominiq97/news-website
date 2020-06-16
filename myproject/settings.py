@@ -30,6 +30,35 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+MARKDOWNX_MARKDOWNIFY_FUNCTION = 'markdownx.utils.markdownify' # Default function that compiles markdown using defined extensions
+
+
+MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {}
+
+# Markdown urls
+MARKDOWNX_URLS_PATH = '/markdownx/markdownify/' # Path that returns compiled markdown text. Change it to your custom app url which could i.e. enable you todo some additional work with compiled markdown text. More info at "Custom MARKDOWNX_URLS_PATH / Further markdownified text manipulations" below.
+MARKDOWNX_UPLOAD_URLS_PATH = '/markdownx/upload/' # Path that accepts file uploads, returns markdown notation of the image.
+
+# Media path
+MARKDOWNX_MEDIA_PATH = 'markdownx/' # Subdirectory, where images will be stored in MEDIA_ROOT folder
+
+# Image
+MARKDOWNX_UPLOAD_MAX_SIZE = 52428800 # 50MB # Maximum file size
+MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png'] # Acceptable file types
+MARKDOWNX_IMAGE_MAX_SIZE = {'size': (500, 500), 'quality': 90,} # Different options describing final image size, compression etc. after upload.
+
+# Editor
+MARKDOWNX_EDITOR_RESIZABLE = True # Update editor's height to inner content height while typing
+
+
+# Markdown extensions
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.smarty',
+    'markdown.extensions.sane_lists',
+    'markdown.extensions.nl2br',
+    'markdown.extensions.extra',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +70,9 @@ INSTALLED_APPS = [
     'news',
     'category',
     'subcategory',
-    'martor',
+#    'martor',
+    'markdownx',
+    'markdown_filter',
 ]
 
 MIDDLEWARE = [

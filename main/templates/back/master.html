@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <!--[if IE 9]>         <html class="no-js lt-ie10" lang="en"> <![endif]-->
 <!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
@@ -28,6 +29,9 @@
         <!-- Stylesheets -->
         <!-- Bootstrap is included in its original form, unaltered -->
         <link rel="stylesheet" href="{% static 'back/css/bootstrap.min.css'%}">
+        <link rel="stylesheet" href="{% static 'back/css/markdownx.min.css'%}">
+        <link rel="stylesheet" href="{% static 'back/css/markdownx.css'%}">
+        
 
         <!-- Related styles of various icon packs and plugins -->
         <link rel="stylesheet" href="{% static 'back/css/plugins.css'%}">
@@ -39,6 +43,8 @@
 
         <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
         <link rel="stylesheet" href="{% static 'back/css/themes.css'%}">
+
+        
         <!-- END Stylesheets -->
 
         <!-- Modernizr (browser feature detection library) -->
@@ -233,6 +239,8 @@
         <script src="{% static 'back/js/vendor/bootstrap.min.js'%}"></script>
         <script src="{% static 'back/js/plugins.js'%}"></script>
         <script src="{% static 'back/js/app.js'%}"></script>
+        <script src="{% static 'back/js/markdownx.js '%}"></script>
+        <script src="{% static 'back/js/markdownx.min.js '%}"></script>
 
         <!-- Google Maps API Key (you will have to obtain a Google Maps API key to use Google Maps) -->
         <!-- For more info please have a look at https://developers.google.com/maps/documentation/javascript/get-api-key#key -->

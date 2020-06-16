@@ -3,6 +3,8 @@
 
 {% block mainblock %}
 
+
+
 <!-- Datatables Header -->
 <div class="content-header">
     <div class="header-section">
@@ -49,10 +51,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                  <div class="col-md-12" id="newsbody" name="newsbody">
-                        <div class="files">
-                            {{ n.body }}
-                        </div>
+                  <div class="col-md-6" id="newsbody" name="newsbody">
+                    <div class="markdownx" style="display:inline-block"> 
+                        <textarea name="body" cols="60" rows="10" required="" id="body" class="markdownx-editor" data-markdownx-editor-resizable="" data-markdownx-urls-path="/markdownx/markdownify/" data-markdownx-upload-urls-path="/markdownx/upload/" data-markdownx-latency="500" style="transition: opacity 1s ease;"></textarea>
+                            {{form}}
+                        <div class="markdownx-preview col-md-6"></div>
+                        {{form.media}}
+                    </div>
+                    
+
                   </div>
                 </div>
                 <div class="form-group">
@@ -70,6 +77,7 @@
                 
                 
             </form>
+            {{ form.media }}
             <!-- END Basic Form Elements Content -->
         </div>
         <!-- END Basic Form Elements Block -->

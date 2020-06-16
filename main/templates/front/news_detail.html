@@ -1,6 +1,6 @@
 {% extends 'front/master.html' %}
 {% load static %}
-
+{% load markdown_filter %}
 
 
 
@@ -84,7 +84,8 @@
                         </div>
 
                         <p align="justify" class="f1-s-11 cl6 p-b-25">
-                            {{n.body}}    
+                            
+                            {{ n.body|markdown_filter }}   
                         </p>
 
                         
