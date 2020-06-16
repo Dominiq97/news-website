@@ -48,13 +48,13 @@
                         <textarea type="text" id="newssummary" name="newssummary" rows="2" class="form-control" placeholder="Short text"></textarea>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <div class="col-md-12">
-                        <textarea type="text" rows="5" id="newsbody" name="newsbody" class="form-control" placeholder="Body"></textarea>
-                    </div>
+                  <div class="col-md-12" id="newsbody" name="newsbody">
+                        <div class="files">
+                            {{ n.body }}
+                        </div>
+                  </div>
                 </div>
-
                 <div class="form-group">
                     <div class="col-md-6">
                         <input type="file" id="myfile" name="myfile" class="form-control" placeholder="Body">
