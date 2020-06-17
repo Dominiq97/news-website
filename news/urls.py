@@ -1,7 +1,7 @@
 
 from django.conf.urls import include, url
 from . import views
-from martor.views import markdown_uploader
+#from martor.views import markdown_uploader
 
 
 urlpatterns = [
@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^panel/news/add/$', views.news_add, name='news_add'),
     url(r'^panel/news/del/(?P<pk>\d+)/$', views.news_delete, name='news_delete'),
     url(r'^panel/news/edit/(?P<pk>\d+)/$', views.news_edit, name='news_edit'),
-    url(r'^api/uploader/$',markdown_uploader, name='markdown_uploader_page'),
+#    url(r'^api/uploader/$',markdown_uploader, name='markdown_uploader_page'),
 ]

@@ -14,9 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.urls import  path
 from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
+
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,7 +27,7 @@ urlpatterns = [
     url(r'',include('news.urls')),
     url(r'',include('category.urls')),
     url(r'',include('subcategory.urls')),
-    url(r'^martor/', include('martor.urls')),
+    path('martor/', include('martor.urls')),
 ]
 
 if settings.DEBUG:
