@@ -1,4 +1,4 @@
-Django==3.0.7
+Django==2.2.11
 bootstrap4==0.1.0
 Pillow==7.1.2
 psycopg2-binary==2.8.5
