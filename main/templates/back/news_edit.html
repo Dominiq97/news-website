@@ -1,6 +1,6 @@
 {% extends 'back/master.html'%}
 {% load static %}
-
+{% load martortags %}
 {% block mainblock %}
 
 <!-- Datatables Header -->
@@ -28,7 +28,7 @@
             <!-- END Form Elements Title -->
 
             <!-- Basic Form Elements Content -->
-            <form action="{% url 'news_add' %}" method="POST" enctype="multipart/form-data" class="form-horizontal form-bordered">
+            <form action="{% url 'news_edit' pk=pk %}" method="POST" enctype="multipart/form-data" class="form-horizontal form-bordered">
                 {% csrf_token %}
                 <div class="form-group">
                     <div class="col-md-6">
@@ -38,7 +38,7 @@
                             <select id="newscategory" name="newscategory" class="select-chosen" data-placeholder="select.." style="width: 250px;">
                                 <option selected="selected" value="{{news.catid}}">{{news.catname}}</option>
                                 {% for c in category %}
-                                <option value="{{c.pk}}">{{c.catname}} | {{c.name}}</option>
+                                <option selected="{{news.catname}}" value="{{c.pk}}">{{c.catname}} | {{c.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -51,13 +51,14 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-12">
-                        <textarea type="text" rows="5" id="newsbody" name="newsbody" class="form-control" placeholder="Body">{{news.body}}</textarea>
+                    <div class="col-md-12" id="newsbody" name="newsbody" class="form-control" >
+                        <div class="files">
+                            {{ form.description }}
+                        </div>
                     </div>
-                    
                 </div>
 
-                <div class="form-group">23
+                <div class="form-group">
                     <div class="col-md-12">
                         <img style="display:inline-block; height:50px;width:60" src={{news.picurl}} />
                     </div>
