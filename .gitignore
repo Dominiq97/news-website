@@ -23,7 +23,7 @@ pyvenv.cfg
 
 # De obicei nu sunt in repo media si static
 # static: se genereaza cu `manage.py collectstatic`
-static
+static/
 
 
 # media: aici sunt fisiere uploadate de fiecare din noi pt teste
