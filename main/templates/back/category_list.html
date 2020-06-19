@@ -21,7 +21,7 @@
     <div class="block-title">
         <h2><strong>Categories</strong> List</h2>
     </div>
-   
+
     <div class="table-responsive">
         <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
             <thead>
@@ -33,7 +33,7 @@
             </thead>
             <tbody>
                 {% for c in category%}
-                <tr>               
+                <tr>
                     <td class="text-center">{{c.pk}}</td>
                     <td>{{c.name}}</td>
                     <td class="text-center">
@@ -44,7 +44,7 @@
                     </td>
                 </tr>
                 {% endfor %}
-        
+
             </tbody>
         </table>
     </div>
@@ -54,7 +54,7 @@
 
 {% block footerblock %}
 <!-- Load and execute javascript code used only in this page -->
-<script src="{%static 'back/js/pages/tablesDatatables.js '%}"></script>
+<script src="{%static 'back/js/pages/tablesDatatables.js' %}"></script>
 <script>$(function(){ TablesDatatables.init(); });</script>
 
 {% endblock %}

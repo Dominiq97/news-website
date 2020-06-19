@@ -19,3 +19,13 @@ bin
 lib
 include
 pyvenv.cfg
+
+
+# De obicei nu sunt in repo media si static
+# static: se genereaza cu `manage.py collectstatic`
+static/
+
+
+# media: aici sunt fisiere uploadate de fiecare din noi pt teste
+# pe server-ul de productie o sa fie clean, si se vor aduna imaginile de la utilizatori
+media
