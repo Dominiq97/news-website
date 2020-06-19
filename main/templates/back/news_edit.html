@@ -52,8 +52,8 @@
 
                 <div class="form-group">
                     <div class="col-md-12" id="newsbody" name="newsbody" class="form-control" >
-                        <div class="files">
-                            {{ form.description }}
+                        <div class="files" value="{{news.body}}">
+                            {{ news.body|safe_markdown }}
                         </div>
                     </div>
                 </div>

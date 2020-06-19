@@ -62,7 +62,7 @@ def news_add(request):
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('description')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
@@ -138,7 +138,7 @@ def news_edit(request,pk):
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
         
         
