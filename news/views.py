@@ -110,4 +110,5 @@ def news_edit(request,pk):
 
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
+
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})

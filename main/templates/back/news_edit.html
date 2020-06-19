@@ -36,7 +36,7 @@
                     </div>
                         <div class="col-md-6">
                             <select id="newscategory" name="newscategory" class="select-chosen" data-placeholder="select.." style="width: 250px;">
-                                <option selected="selected" value="{{news.catid}}">{{news.catname}}</option>
+                                <option value="{{news.category_id}}">{{news.category}}</option>
                                 {% for c in category %}
                                 <option value="{{c.pk}}">{{c.catname}} | {{c.name}}</option>
                                 {% endfor %}
@@ -57,15 +57,14 @@
                     
                 </div>
 
-                <div class="form-group">23
-                    <div class="col-md-12">
-                        <img style="display:inline-block; height:50px;width:60" src={{news.picurl}} />
-                    </div>
-                </div>
+            
 
                 <div class="form-group">
                     <div class="col-md-6">
                         <input type="file" id="myfile" name="myfile" class="form-control" placeholder="Body">
+                    </div>
+                    <div class="col-md-6">
+                        <img style="display:inline-block; height:50px;width:60" src={{news.picurl}} />
                     </div>
                 </div>
 
