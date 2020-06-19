@@ -7,9 +7,9 @@ from martor.fields import MartorFormField
 class News(models.Model):
     name = models.CharField(max_length=50)
     summary = models.TextField()
-    body = MartorField(default="")
+    body = MartorField()
     date = models.CharField(max_length=12,default="//")
-    time = models.CharField(max_length=12,default="00:00") 
+    time = models.CharField(max_length=12,default="00:00")
     picname = models.TextField()
     picurl = models.TextField(default="-")
     writer = models.CharField(max_length=50)

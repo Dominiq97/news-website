@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import News
 from main.models import Main
 from django.core.files.storage import FileSystemStorage
-import datetime 
+import datetime
 from subcategory.models import SubCategory
 from category.models import Category
 from .forms import (SimpleForm, PostForm)
@@ -33,9 +33,9 @@ def news_list(request):
     return render(request, 'back/news_list.html',{'news':news})
 
 def news_add(request):
-    
-    
-    
+
+
+
     now = datetime.datetime.now()
     year =  now.year
     day = now.day
@@ -69,7 +69,7 @@ def news_add(request):
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
 
-        try:    
+        try:
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
@@ -80,13 +80,13 @@ def news_add(request):
 
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
-                    news_added = News(name=newstitle, 
-                summary=newssummary, 
-                body=newsbody, 
-                date=today, 
+                    news_added = News(name=newstitle,
+                summary=newssummary,
+                body=newsbody,
+                date=today,
                 time=time,
                 picname=filename,
-                picurl=url, 
+                picurl=url,
                 writer="-",
                 category=newsname,
                 category_id=newsid,
@@ -97,7 +97,7 @@ def news_add(request):
                 else:
                     error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
-            
+
             else:
                 fs = FileSystemStorage()
                 fs.delete(filename)
@@ -129,25 +129,23 @@ def news_delete(request,pk):
 def news_edit(request,pk):
 
     news = News.objects.get(pk=pk)
-    print(news.body)
     category = SubCategory.objects.all()
-    form = SimpleForm()
-    description = news.body
-
+    # Aici trimitem news.body catre forms.py PostForm
+    form = PostForm(some_body=news.body)
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
-        
-        
+
+
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
 
-        try:    
+        try:
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
@@ -173,7 +171,7 @@ def news_edit(request,pk):
                 else:
                     error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
-            
+
             else:
                 fs = FileSystemStorage()
                 fs.delete(filename)
@@ -193,5 +191,5 @@ def news_edit(request,pk):
             news_edited.save()
             return redirect('news_list')
 
-    
+
     return render(request, 'back/news_edit.html',{'form': form,'pk':pk,'news':news,'category':category})
