@@ -111,4 +111,62 @@ def news_edit(request,pk):
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
 
+    if request.method == 'POST':
+        newstitle = request.POST.get('newstitle')
+        newscategory = request.POST.get('newscategory')
+        newssummary = request.POST.get('newssummary')
+        newsbody = request.POST.get('newsbody')
+        newsid = request.POST.get('newscategory')
+        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
+            error = "All fields required"
+            return render(request,'back/error.html',{'error':error})
+
+        try:    
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            url = fs.url(filename)
+
+            if str(myfile.content_type).startswith("image"):
+
+                if (myfile.size < 5000000):
+                    newsname=SubCategory.objects.get(pk=newsid).name
+                    news_added = News.objects.get(pk=pk)
+
+                    fss = FileSystemStorage()
+                    fss.delete(news_deleted.picname)
+
+                    news_added.name=newstitle
+                    news_added.summary=newssummary
+                    news_added.body = newsbody
+                    news_added.picname=filename
+                    news_added.picurl=url
+                    news_added.writer="-"
+                    news_added.category=newsname
+                    news_added.category_id=newsid
+                    news_added.save()
+                    return redirect('news_list')
+                else:
+                    error: "Your file is bigger than 5 Mb"
+                    return render(request,'back/error.html',{'error':error})
+            
+            else:
+                fs = FileSystemStorage()
+                fs.delete(filename)
+                error = "Your file not supported"
+                return render(request,'back/error.html',{'error':error})
+
+        except:
+            newsname=SubCategory.objects.get(pk=newsid).name
+            news_added = News.objects.get(pk=pk)
+
+            news_added.name=newstitle
+            news_added.summary=newssummary
+            news_added.body = newsbody
+            news_added.category=newsname
+            news_added.category_id=newsid
+            
+            news_added.save()
+            return redirect('news_list')
+
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
