@@ -108,6 +108,10 @@ def news_delete(request,pk):
 
 def news_edit(request,pk):
 
+    if len(News.objects.filter(pk=pk))==0:
+        error = "News does not exist!"
+        return render(request,'back/error.html',{'error':error})
+
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
 
@@ -165,7 +169,7 @@ def news_edit(request,pk):
             news_added.body = newsbody
             news_added.category=newsname
             news_added.category_id=newsid
-            
+
             news_added.save()
             return redirect('news_list')
 
