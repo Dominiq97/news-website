@@ -6,6 +6,8 @@ django-ckeditor==5.9.0
 django-editor==0.1
 django-js-asset==1.2.2
 idna==2.9
+Markdown==3.2.2
+martor==1.4.9
 Pillow==7.1.2
 psycopg2-binary==2.8.5
 pytz==2020.1
