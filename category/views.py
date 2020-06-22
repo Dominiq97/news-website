@@ -22,3 +22,15 @@ def category_add(request):
 
 
     return render(request,'back/category_add.html')
+
+def category_delete(request,pk):
+
+    try:
+        category_deleted = Category.objects.get(pk=pk)
+        category_deleted.delete()
+    except:
+        error = "Something Wrong"
+        return render(request,'back/error.html',{'error':error})
+
+
+    return redirect('category_list')

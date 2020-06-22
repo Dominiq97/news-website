@@ -25,3 +25,13 @@ def subcategory_add(request):
 
 
     return render(request,'back/subcategory_add.html',{'category':category})
+
+
+def subcategory_delete(request,pk):
+    try:
+        subcat_deleted = SubCategory.objects.get(pk=pk)
+        subcat_deleted.delete()
+    except:
+        error = "Something Wrong"
+        return render(request,'back/error.html',{'error':error})
+    return redirect('subcategory_list')
