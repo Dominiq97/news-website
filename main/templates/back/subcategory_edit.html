@@ -34,7 +34,7 @@
                 
                 <div class="col-md-6">
                     <select id="category" name="category" class="select-chosen" data-placeholder="Choose a Category..." style="width: 250px;">
-                        <option selected="selected" value="subcategory.name">{{subcategory.category}}
+                        <option value="{{subcategory.catid}}">{{subcategory.catname}}</option>
                         {% for c in category %}
                         <option value="{{c.pk}}">{{c.name}}</option>
                         {% endfor %}
