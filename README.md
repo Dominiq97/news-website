@@ -34,3 +34,10 @@ Daca nu avem la dispozitie si baza de date (sqlite sau PostgreSQL):
 ```bash
 python manage.py migrate
 ```
+
+Accesare PANEL ADMIN
+- barmeniul negru dupa ce rulam serverul: python manage.py runserver
+https://localhost:8000
+si apoi avem Admin Panel 
+
+
