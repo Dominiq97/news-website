@@ -1,5 +1,6 @@
 {% extends 'back/master.html'%}
 {% load static %}
+{% load martortags %}
 
 {% block mainblock %}
 
@@ -51,7 +52,9 @@
                 <div class="form-group">
                   <div class="col-md-12" id="newsbody" name="newsbody">
                         <div class="files">
-                            <textarea type="text" id="newsbody" name="newsbody" rows="5" class="form-control" placeholder="Body"></textarea>
+                            <textarea type="text" id="newsbody" name="newsbody" rows="5" class="form-control" placeholder="Body">
+                                {{ form.description }}
+                            </textarea>
                         </div>
                   </div>
                 </div>

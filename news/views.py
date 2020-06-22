@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 import datetime 
 from subcategory.models import SubCategory
 from category.models import Category
+from news.forms import (SimpleForm, PostForm)
 
 # Create your views here.
 
@@ -39,7 +40,7 @@ def news_add(request):
     time = str(hour) + ":" + str(minute)
 
     category = SubCategory.objects.all()
-
+    form = SimpleForm()
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
@@ -58,7 +59,6 @@ def news_add(request):
             url = fs.url(filename)
 
             if str(myfile.content_type).startswith("image"):
-
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
                     news_added = News(name=newstitle, 
@@ -89,7 +89,7 @@ def news_add(request):
             error = "Please input your image"
             return render(request,'back/error.html',{'error':error})
 
-    return render(request, 'back/news_add.html',{'category':category})
+    return render(request, 'back/news_add.html',{'category':category,'form':form,'title':'Simple Form'})
 
 def news_delete(request,pk):
 
