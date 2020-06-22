@@ -135,22 +135,24 @@ def news_edit(request,pk):
 
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
-                    news_added = News.objects.get(pk=pk)
+                    news_edited = News.objects.get(pk=pk)
 
                     fss = FileSystemStorage()
-                    fss.delete(news_deleted.picname)
+                    fss.delete(news_edited.picname)
 
-                    news_added.name=newstitle
-                    news_added.summary=newssummary
-                    news_added.body = newsbody
-                    news_added.picname=filename
-                    news_added.picurl=url
-                    news_added.writer="-"
-                    news_added.category=newsname
-                    news_added.category_id=newsid
-                    news_added.save()
+                    news_edited.name=newstitle
+                    news_edited.summary=newssummary
+                    news_edited.body = newsbody
+                    news_edited.picname=filename
+                    news_edited.picurl=url
+                    news_edited.writer="-"
+                    news_edited.category=newsname
+                    news_edited.category_id=newsid
+                    news_edited.save()
                     return redirect('news_list')
                 else:
+                    fs = FileSystemStorage()
+                    fs.delete(filename)
                     error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
             
@@ -162,15 +164,15 @@ def news_edit(request,pk):
 
         except:
             newsname=SubCategory.objects.get(pk=newsid).name
-            news_added = News.objects.get(pk=pk)
+            news_edited = News.objects.get(pk=pk)
 
-            news_added.name=newstitle
-            news_added.summary=newssummary
-            news_added.body = newsbody
-            news_added.category=newsname
-            news_added.category_id=newsid
+            news_edited.name=newstitle
+            news_edited.summary=newssummary
+            news_edited.body = newsbody
+            news_edited.category=newsname
+            news_edited.category_id=newsid
 
-            news_added.save()
+            news_edited.save()
             return redirect('news_list')
 
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
