@@ -13,14 +13,14 @@ Python 3.8.2
 python3 -m venv .
 ```
 
-- instalam requirements
-```bash
-pip install -r requirements.txt
-```
-
 - activam virtualenv
 ```bash
 source bin/activate
+```
+
+- instalam requirements
+```bash
+pip install -r requirements.txt
 ```
 
 - runserver
