@@ -13,14 +13,14 @@ Python 3.8.2
 python3 -m venv .
 ```
 
-- instalam requirements
-```bash
-pip install -r requirements.txt
-```
-
 - activam virtualenv
 ```bash
 source bin/activate
+```
+
+- instalam requirements
+```bash
+pip install -r requirements.txt
 ```
 
 - runserver
@@ -34,3 +34,10 @@ Daca nu avem la dispozitie si baza de date (sqlite sau PostgreSQL):
 ```bash
 python manage.py migrate
 ```
+
+Accesare PANEL ADMIN
+- barmeniul negru dupa ce rulam serverul: python manage.py runserver
+https://localhost:8000
+si apoi avem Admin Panel 
+
+
