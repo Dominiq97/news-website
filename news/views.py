@@ -41,14 +41,15 @@ def news_add(request):
 
     category = SubCategory.objects.all()
     form = SimpleForm()
+    context = {'form': form, 'title': 'Simple Form','category':category}
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('description')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
+        if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
 
@@ -89,7 +90,7 @@ def news_add(request):
             error = "Please input your image"
             return render(request,'back/error.html',{'error':error})
 
-    return render(request, 'back/news_add.html',{'category':category,'form':form,'title':'Simple Form'})
+    return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
 
@@ -114,12 +115,14 @@ def news_edit(request,pk):
 
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
+    form = PostForm(some_body=news.body)
+    context = {'form':form, 'title': 'Simple Form','category':category}
 
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
@@ -177,4 +180,4 @@ def news_edit(request,pk):
         except:
             error = "Subcategory doesn't exist"
             return render(request,'back/error.html',{'error':error})
-    return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
+    return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category,'form': form, 'title': 'Simple Form'})
