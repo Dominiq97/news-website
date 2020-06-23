@@ -40,8 +40,14 @@ MARTOR_ENABLE_CONFIGS = getattr(
     }
 )
 
+import time
+MARTOR_UPLOAD_PATH = 'images/uploads/{}'.format(time.strftime("%Y/%m/%d/"))
+MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
+
+MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB
+
 # To setup the martor editor with label or not (default is False)
-MARTOR_ENABLE_LABEL = False
+MARTOR_ENABLE_LABEL = True
 
 # Imgur API Keys
 MARTOR_IMGUR_CLIENT_ID = 'your-client-id'
@@ -71,10 +77,6 @@ MARTOR_MARKDOWN_EXTENSIONS = [
 
 # Markdown Extensions Configs
 MARTOR_MARKDOWN_EXTENSION_CONFIGS = {}
-
-# Markdown urls
-MARTOR_UPLOAD_URL = '/martor/uploader/' # default
-MARTOR_SEARCH_USERS_URL = '/martor/search-user/' # default
 
 # Markdown Extensions
 # MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://www.webfx.com/tools/emoji-cheat-sheet/graphics/emojis/'     # from webfx
