@@ -1,3 +1,15 @@
+import os
+import json
+import uuid
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+from martor.utils import LazyEncoder
 from django.shortcuts import render, redirect
 from .models import News
 from main.models import Main
@@ -5,6 +17,7 @@ from django.core.files.storage import FileSystemStorage
 import datetime 
 from subcategory.models import SubCategory
 from category.models import Category
+from news.forms import (SimpleForm, PostForm)
 
 # Create your views here.
 
@@ -39,15 +52,16 @@ def news_add(request):
     time = str(hour) + ":" + str(minute)
 
     category = SubCategory.objects.all()
-
+    form = SimpleForm()
+    context = {'form': form, 'title': 'Simple Form','category':category}
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('description')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
+        if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
 
@@ -58,7 +72,6 @@ def news_add(request):
             url = fs.url(filename)
 
             if str(myfile.content_type).startswith("image"):
-
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
                     news_added = News(name=newstitle, 
@@ -89,7 +102,7 @@ def news_add(request):
             error = "Please input your image"
             return render(request,'back/error.html',{'error':error})
 
-    return render(request, 'back/news_add.html',{'category':category})
+    return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
 
@@ -114,12 +127,14 @@ def news_edit(request,pk):
 
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
+    form = PostForm(some_body=news.body)
+    context = {'form':form, 'title': 'Simple Form','category':category}
 
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('newsbody')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
@@ -177,4 +192,44 @@ def news_edit(request,pk):
         except:
             error = "Subcategory doesn't exist"
             return render(request,'back/error.html',{'error':error})
-    return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category})
+    return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category,'form': form, 'title': 'Simple Form'})
+
+
+def markdown_uploader(request):
+    if request.method == 'POST' and request.is_ajax():
+        if 'markdown-image-upload' in request.FILES:
+            image = request.FILES['markdown-image-upload']
+            image_types = [
+                'image/png', 'image/jpg',
+                'image/jpeg', 'image/pjpeg', 'image/gif'
+            ]
+            if image.content_type not in image_types:
+                data = json.dumps({
+                    'status': 405,
+                    'error': _('Bad image format.')
+                }, cls=LazyEncoder)
+                return HttpResponse(
+                    data, content_type='application/json', status=405)
+
+            if image.size > settings.MAX_IMAGE_UPLOAD_SIZE:
+                to_MB = settings.MAX_IMAGE_UPLOAD_SIZE / (1024 * 1024)
+                data = json.dumps({
+                    'status': 405,
+                    'error': _('Maximum image file is %(size) MB.') % {'size': to_MB}
+                }, cls=LazyEncoder)
+                return HttpResponse(
+                    data, content_type='application/json', status=405)
+
+            img_uuid = "{0}-{1}".format(uuid.uuid4().hex[:10], image.name.replace(' ', '-'))
+            tmp_file = os.path.join(settings.MARTOR_UPLOAD_PATH, img_uuid)
+            def_path = default_storage.save(tmp_file, ContentFile(image.read()))
+            img_url = os.path.join(settings.MEDIA_URL, def_path)
+
+            data = json.dumps({
+                'status': 200,
+                'link': img_url,
+                'name': image.name
+            })
+            return HttpResponse(data, content_type='application/json')
+        return HttpResponse(_('Invalid request!'))
+    return HttpResponse(_('Invalid request!'))

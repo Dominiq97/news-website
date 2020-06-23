@@ -1,6 +1,13 @@
+from django.db import models
 from django.contrib import admin
-from .models import News
 
-# Register your models here.
+from martor.widgets import AdminMartorWidget
 
-admin.site.register(News)
+from news.models import News
+
+class YourModelAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        News.body: {'widget': AdminMartorWidget},
+    }
+
+admin.site.register(News, YourModelAdmin)

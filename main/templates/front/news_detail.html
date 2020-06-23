@@ -1,17 +1,11 @@
 {% extends 'front/master.html' %}
 {% load static %}
 
-
-
-
-
+{% load martortags %}
 
 {% block headblock %}
 <title>{{site.name}} | News Detail</title>
 {% endblock %}
-
-
-
 
 
 {% block mainblock %}
@@ -83,8 +77,8 @@
                             <img src="{{n.picurl}}" alt="IMG">
                         </div>
 
-                        <p align="justify" class="f1-s-11 cl6 p-b-25">
-                            {{n.body}}    
+                        <p style="text-align:justify" class="f1-s-11 cl6 p-b-25">
+                            {{ n.body | safe_markdown}}    
                         </p>
 
                         

@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.urls import path
 from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
+from news.views import markdown_uploader
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,6 +26,8 @@ urlpatterns = [
     url(r'',include('news.urls')),
     url(r'',include('category.urls')),
     url(r'',include('subcategory.urls')),
+    path('martor/', include('martor.urls')),
+    path('api/uploader/', markdown_uploader, name='markdown_uploader_page'),
 ]
 
 if settings.DEBUG:
