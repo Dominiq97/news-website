@@ -18,17 +18,29 @@ import datetime
 from subcategory.models import SubCategory
 from category.models import Category
 from news.forms import (SimpleForm, PostForm)
+from django.db.models import Q
+from .models import Tag
+from django.views.generic import TemplateView
+
 
 # Create your views here.
 
 def news_detail(request,pk):
     site = Main.objects.get(pk=2)
     news = News.objects.filter(pk=pk)
-    return render(request, 'front/news_detail.html',{'site':site,'news':news})
+    tags = Tag.objects.filter(Q(newsTag=news[0]))
+    tagsAll = Tag.objects.all()
+    return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags,'tagsAll':tagsAll})
 
 def news_list(request):
     news = News.objects.all()
     return render(request, 'back/news_list.html',{'news':news})
+
+
+def search(request):
+    query = request.GET.get('q')
+    news = News.objects.filter(Q(tag__name=query))  
+    return render(request,'front/search.html',{'news':news,'query':query})
 
 def news_add(request):
 
@@ -58,56 +70,57 @@ def news_add(request):
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('description')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
+        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-
-        try:    
-            myfile = request.FILES['myfile']
-            fs = FileSystemStorage()
-            filename = fs.save(myfile.name, myfile)
-            url = fs.url(filename)
-
-            if str(myfile.content_type).startswith("image"):
-                if (myfile.size < 5000000):
-                    newsname=SubCategory.objects.get(pk=newsid).name
-                    news_added = News(name=newstitle, 
-                summary=newssummary, 
-                body=newsbody, 
-                date=today, 
-                time=time,
-                picname=filename,
-                picurl=url, 
-                writer="-",
-                category=newsname,
-                category_id=newsid,
-                show=0
-                )
-                    news_added.save()
-                    return redirect('news_list')
-                else:
-                    error: "Your file is bigger than 5 Mb"
-                    return render(request,'back/error.html',{'error':error})
-            
-            else:
+        try:
+            try:    
+                myfile = request.FILES['myfile']
                 fs = FileSystemStorage()
-                fs.delete(filename)
-                error = "Your file not supported"
+                filename = fs.save(myfile.name, myfile)
+                url = fs.url(filename)
+
+                if str(myfile.content_type).startswith("image"):
+                    if (myfile.size < 5000000):
+                        newsname=SubCategory.objects.get(pk=newsid).name
+                        news_added = News(name=newstitle, 
+                    summary=newssummary, 
+                    body=newsbody, 
+                    date=today, 
+                    time=time,
+                    picname=filename,
+                    picurl=url, 
+                    writer="-",
+                    category=newsname,
+                    category_id=newsid,
+                    show=0
+                    )
+                        news_added.save()
+                        return redirect('news_list')
+                    else:
+                        error: "Your file is bigger than 5 Mb"
+                        return render(request,'back/error.html',{'error':error})
+                
+                else:
+                    fs = FileSystemStorage()
+                    fs.delete(filename)
+                    error = "Your file not supported"
+                    return render(request,'back/error.html',{'error':error})
+
+            except:
+                error = "Please input your image"
                 return render(request,'back/error.html',{'error':error})
-
         except:
-            error = "Please input your image"
+            error = "Subcategory doesn't exist"
             return render(request,'back/error.html',{'error':error})
-
     return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
 
     try:
-
         news_deleted = News.objects.get(pk=pk)
         fs = FileSystemStorage()
         fs.delete(news_deleted.picname)
@@ -233,3 +246,10 @@ def markdown_uploader(request):
             return HttpResponse(data, content_type='application/json')
         return HttpResponse(_('Invalid request!'))
     return HttpResponse(_('Invalid request!'))
+
+class ListNewsByTag(TemplateView):
+    template_name = 'front/search.html'
+    def get(self, request, *args, **kwargs):
+        tag_url = kwargs['tag']
+        news = News.objects.filter(tag__name=tag_url)
+        return render(request, self.template_name, {'news':news,'query':tag_url})

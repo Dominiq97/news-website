@@ -3,7 +3,8 @@ from django.contrib import admin
 
 from martor.widgets import AdminMartorWidget
 
-from news.models import News
+from .models import News
+from .models import Tag
 
 class YourModelAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -11,3 +12,4 @@ class YourModelAdmin(admin.ModelAdmin):
     }
 
 admin.site.register(News, YourModelAdmin)
+admin.site.register(Tag)
