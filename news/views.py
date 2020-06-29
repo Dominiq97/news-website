@@ -18,17 +18,22 @@ import datetime
 from subcategory.models import SubCategory
 from category.models import Category
 from news.forms import (SimpleForm, PostForm)
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
+
 
 # Create your views here.
 
 def news_detail(request,pk):
     site = Main.objects.get(pk=2)
-    news = News.objects.filter(pk=pk)
+    news = get_object_or_404(News, pk=pk)
     return render(request, 'front/news_detail.html',{'site':site,'news':news})
 
 def news_list(request):
     news = News.objects.all()
     return render(request, 'back/news_list.html',{'news':news})
+
 
 def news_add(request):
 
@@ -58,13 +63,13 @@ def news_add(request):
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
-        newsbody = request.POST.get('description')
+        newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
+        newstags = request.POST.get('newstags')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == None or newscategory == "":
+        if newstitle == "" or newssummary == "" or newsbody==None or newscategory == "":
             error = "All fields required"
-            return render(request,'back/error.html',{'error':error})
-
+            return render(request,'back/error.html',{'error':error})                                                            
         try:    
             myfile = request.FILES['myfile']
             fs = FileSystemStorage()
@@ -74,6 +79,7 @@ def news_add(request):
             if str(myfile.content_type).startswith("image"):
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
+                    counting_cat_id = SubCategory.objects.get(pk=newsid).category_id
                     news_added = News(name=newstitle, 
                 summary=newssummary, 
                 body=newsbody, 
@@ -84,31 +90,38 @@ def news_add(request):
                 writer="-",
                 category=newsname,
                 category_id=newsid,
-                show=0
+                show=0,
+                counting_cat_id=counting_cat_id
                 )
                     news_added.save()
+                    count = len(News.objects.filter(counting_cat_id=counting_cat_id))
+
+                    category_count = Category.objects.get(pk=counting_cat_id)
+                    category_count.count = count
+                    category_count.save()
                     return redirect('news_list')
                 else:
                     error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
             
             else:
-                fs = FileSystemStorage()
-                fs.delete(filename)
                 error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
 
         except:
+            fs = FileSystemStorage()
+            fs.delete(filename)
             error = "Please input your image"
+            print(newstags, newsbody, newscategory, newsid, url, newstags, filename, newsname,time, today, myfile)
             return render(request,'back/error.html',{'error':error})
-
+    
     return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
 
     try:
-
         news_deleted = News.objects.get(pk=pk)
+        
         fs = FileSystemStorage()
         fs.delete(news_deleted.picname)
         news_deleted.delete()
@@ -139,59 +152,56 @@ def news_edit(request,pk):
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-        try:
-            try:    
-                myfile = request.FILES['myfile']
-                fs = FileSystemStorage()
-                filename = fs.save(myfile.name, myfile)
-                url = fs.url(filename)
+        
+        try:    
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            url = fs.url(filename)
 
-                if str(myfile.content_type).startswith("image"):
+            if str(myfile.content_type).startswith("image"):
 
-                    if (myfile.size < 5000000):
-                        newsname=SubCategory.objects.get(pk=newsid).name
-                        news_edited = News.objects.get(pk=pk)
+                if (myfile.size < 5000000):
+                    newsname=SubCategory.objects.get(pk=newsid).name
+                    news_edited = News.objects.get(pk=pk)
 
-                        fss = FileSystemStorage()
-                        fss.delete(news_edited.picname)
+                    fss = FileSystemStorage()
+                    fss.delete(news_edited.picname)
 
-                        news_edited.name=newstitle
-                        news_edited.summary=newssummary
-                        news_edited.body = newsbody
-                        news_edited.picname=filename
-                        news_edited.picurl=url
-                        news_edited.writer="-"
-                        news_edited.category=newsname
-                        news_edited.category_id=newsid
-                        news_edited.save()
-                        return redirect('news_list')
-                    else:
-                        fs = FileSystemStorage()
-                        fs.delete(filename)
-                        error: "Your file is bigger than 5 Mb"
-                        return render(request,'back/error.html',{'error':error})
-                
+                    news_edited.name=newstitle
+                    news_edited.summary=newssummary
+                    news_edited.body = newsbody
+                    news_edited.picname=filename
+                    news_edited.picurl=url
+                    news_edited.writer="-"
+                    news_edited.category=newsname
+                    news_edited.category_id=newsid
+                    news_edited.save()
+                    return redirect('news_list')
                 else:
                     fs = FileSystemStorage()
                     fs.delete(filename)
-                    error = "Your file not supported"
+                    error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
+            
+            else:
+                fs = FileSystemStorage()
+                fs.delete(filename)
+                error = "Your file not supported"
+                return render(request,'back/error.html',{'error':error})
 
-            except:
-                newsname=SubCategory.objects.get(pk=newsid).name
-                news_edited = News.objects.get(pk=pk)
-
-                news_edited.name=newstitle
-                news_edited.summary=newssummary
-                news_edited.body = newsbody
-                news_edited.category=newsname
-                news_edited.category_id=newsid
-
-                news_edited.save()
-                return redirect('news_list')
         except:
-            error = "Subcategory doesn't exist"
-            return render(request,'back/error.html',{'error':error})
+            newsname=SubCategory.objects.get(pk=newsid).name
+            news_edited = News.objects.get(pk=pk)
+
+            news_edited.name=newstitle
+            news_edited.summary=newssummary
+            news_edited.body = newsbody
+            news_edited.category=newsname
+            news_edited.category_id=newsid
+
+            news_edited.save()
+            return redirect('news_list')
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category,'form': form, 'title': 'Simple Form'})
 
 
@@ -233,3 +243,4 @@ def markdown_uploader(request):
             return HttpResponse(data, content_type='application/json')
         return HttpResponse(_('Invalid request!'))
     return HttpResponse(_('Invalid request!'))
+

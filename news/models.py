@@ -5,7 +5,7 @@ from martor.models import MartorField
 # Create your models here.
 
 class News(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=300)
     summary = models.TextField()
     body = MartorField()
     date = models.CharField(max_length=12,default="//")
@@ -15,6 +15,7 @@ class News(models.Model):
     writer = models.CharField(max_length=50)
     category = models.CharField(max_length=50,default="-")
     category_id = models.IntegerField(default=0)
+    counting_cat_id = models.IntegerField(default=0)
     show = models.IntegerField(default=0)
 
 

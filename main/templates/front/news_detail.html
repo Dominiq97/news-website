@@ -10,7 +10,7 @@
 
 {% block mainblock %}
 
-{% for n in news%}
+
 
 <div class="container">
     <div class="headline bg0 flex-wr-sb-c p-rl-20 p-tb-8">
@@ -48,24 +48,24 @@
                         </a>
 
                         <h3 class="f1-l-3 cl2 p-b-16 p-t-33 respon2">
-                            {{n.name}}
+                            {{news.name}}
                         </h3>
                         
                         <div class="flex-wr-s-s p-b-40">
                             <span class="f1-s-3 cl8 m-r-15">
                                 <a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-                                    by {{n.writer}}
+                                    by {{news.writer}}
                                 </a>
 
                                 <span class="m-rl-3">-</span>
 
                                 <span>
-                                    {{n.date}}
+                                    {{news.date}}
                                 </span>
                             </span>
 
                             <span class="f1-s-3 cl8 m-r-15">
-                                {{n.show}}
+                                {{news.show}}
                             </span>
 
                             <a href="#" class="f1-s-3 cl8 hov-cl10 trans-03 m-r-15">
@@ -74,11 +74,11 @@
                         </div>
 
                         <div class="wrap-pic-max-w p-b-30">
-                            <img src="{{n.picurl}}" alt="IMG">
+                            <img src="{{news.picurl}}" alt="IMG">
                         </div>
 
                         <p style="text-align:justify" class="f1-s-11 cl6 p-b-25">
-                            {{ n.body | safe_markdown}}    
+                            {{ news.body | safe_markdown}}    
                         </p>
 
                         
@@ -319,6 +319,6 @@
     </div>
 </section>
 
-{% endfor %}
+
 
 {% endblock %}
