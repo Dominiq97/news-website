@@ -263,23 +263,24 @@ def tags_list(request):
     tags = Tag.objects.all()
     return render(request,'back/tag_list.html',{'tags':tags})
 
-'''
-def category_add(request):
+
+def tags_add(request):
     if request.method =='POST':
-        catname=request.POST.get('catname')
-        if catname == "":
+        tagname=request.POST.get('tagname')
+        if tagname == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-        if len(Category.objects.filter(name=catname)) != 0 :
-            error = "This Name Used Before!"
+        if len(Tag.objects.filter(name=tagname)) != 0 :
+            error = "This Tag Used Before!"
             return render(request,'back/error.html',{'error':error})
-        category = Category(name=catname)
-        category.save()
-        return redirect('category_list')
+        tag = Tag(name=tagname)
+        tag.save()
+        return redirect('tags_list')
 
 
-    return render(request,'back/category_add.html')
-'''
+    return render(request,'back/tag_add.html')
+
+
 def tags_delete(request,pk):
 
     try:
