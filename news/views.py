@@ -67,13 +67,15 @@ def news_add(request):
 
     category = SubCategory.objects.all()
     form = SimpleForm()
-    context = {'form': form, 'title': 'Simple Form','category':category}
+    tags = Tag.objects.all()
+    context = {'form': form, 'title': 'Simple Form','category':category,'tags':tags}
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
+        newstags = request.POST.get('newstags')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
@@ -88,6 +90,7 @@ def news_add(request):
                 if str(myfile.content_type).startswith("image"):
                     if (myfile.size < 5000000):
                         newsname=SubCategory.objects.get(pk=newsid).name
+                        newstag=Tag.objects.get(pk=newstags).name
                         news_added = News(name=newstitle, 
                     summary=newssummary, 
                     body=newsbody, 
@@ -98,7 +101,8 @@ def news_add(request):
                     writer="-",
                     category=newsname,
                     category_id=newsid,
-                    show=0
+                    show=0,
+                    tags=newstag,
                     )
                         news_added.save()
                         return redirect('news_list')
@@ -113,7 +117,9 @@ def news_add(request):
                     return render(request,'back/error.html',{'error':error})
 
             except:
-                error = "Please input your image"
+                fs = FileSystemStorage()
+                fs.delete(filename)
+                error = "Please input your image"+newstags
                 return render(request,'back/error.html',{'error':error})
         except:
             error = "Subcategory doesn't exist"
@@ -318,3 +324,4 @@ def tags_edit(request,pk):
             tag_edited.save()
             return redirect('tags_list')
     return render(request, 'back/tag_edit.html',{'pk':pk,'tag':tag})
+
