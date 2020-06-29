@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^panel/news/edit/(?P<pk>\d+)/$', views.news_edit, name='news_edit'),
     path('news_by/<str:tag>', views.ListNewsByTag.as_view(),name='list_by_tag'),
     url(r'^panel/tags/del/(?P<pk>\d+)/$', views.tags_delete, name='tags_delete'),
-#   url(r'^panel/tags/edit/(?P<pk>\d+)/$', views.tags_edit, name='tags_edit'),
+    url(r'^panel/tags/edit/(?P<pk>\d+)/$', views.tags_edit, name='tags_edit'),
     url(r'^panel/tags/list/$',views.tags_list, name='tags_list'),
     url(r'^panel/tags/add/$',views.tags_add, name='tags_add'),
 ]
