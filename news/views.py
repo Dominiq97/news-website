@@ -20,6 +20,7 @@ from category.models import Category
 from news.forms import (SimpleForm, PostForm)
 from django.db.models import Q
 from .models import Tag
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 
@@ -27,10 +28,10 @@ from django.views.generic import TemplateView
 
 def news_detail(request,pk):
     site = Main.objects.get(pk=2)
-    news = News.objects.filter(pk=pk)
-    tags = Tag.objects.filter(Q(newsTag=news[0]))
-    tagsAll = Tag.objects.all()
-    return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags,'tagsAll':tagsAll})
+    news = get_object_or_404(News,pk=pk)
+    tags = Tag.objects.all()
+   # print(news)
+    return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags})
 
 def news_list(request):
     news = News.objects.all()
@@ -39,7 +40,8 @@ def news_list(request):
 
 def search(request):
     query = request.GET.get('q')
-    news = News.objects.filter(Q(tag__name=query))  
+    news = News.objects.filter(Q(tag__name=query))
+    tags = Tag.objects.all()  
     return render(request,'front/search.html',{'news':news,'query':query})
 
 def news_add(request):
@@ -122,6 +124,7 @@ def news_delete(request,pk):
 
     try:
         news_deleted = News.objects.get(pk=pk)
+        
         fs = FileSystemStorage()
         fs.delete(news_deleted.picname)
         news_deleted.delete()
@@ -251,5 +254,6 @@ class ListNewsByTag(TemplateView):
     template_name = 'front/search.html'
     def get(self, request, *args, **kwargs):
         tag_url = kwargs['tag']
-        news = News.objects.filter(tag__name=tag_url)
-        return render(request, self.template_name, {'news':news,'query':tag_url})
+        news = News.objects.filter(tags__name=tag_url)
+        tags = Tag.objects.all()
+        return render(request, self.template_name, {'news':news,'query':tag_url,'tags':tags})

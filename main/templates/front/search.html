@@ -21,7 +21,7 @@
 <div class="container">
 	<div class="how2 how2-cl4 flex-s-c">
 		<h3 class="f1-m-2 cl3 tab01-title">
-			Tag: {{query}}
+			Tag: {{query}} 
 		</h3>
 	</div>
 
@@ -62,9 +62,22 @@
 				</div>
 			</div>
 		</div>
-		{% endfor %}
+        {% endfor %}
+        <hr>
 		
-	</div>
+    </div>
+    
+        <h3 class="f1-m-2 cl3 tab01-title">
+            Other tags:  
+            {% for t in tags %}
+            <div class="flex-wr-s-s m-rl--7">
+                    <a href="{% url 'list_by_tag' t %}" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
+                        {{t.name}}
+                    </a>
+                {% endfor %}
+            </div>
+        </h3>
+    
 </div>
 </section>
 {% endblock %}

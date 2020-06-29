@@ -10,7 +10,7 @@
 
 {% block mainblock %}
 
-{% for n in news%}
+
 
 <div class="container">
     <div class="headline bg0 flex-wr-sb-c p-rl-20 p-tb-8">
@@ -22,7 +22,7 @@
                 News
             </a>
             <span class="breadcrumb-item f1-s-3 cl9">
-                {{n.name}}
+                {{news.name}}
             </span>
         </div>
 
@@ -48,24 +48,24 @@
                         </a>
 
                         <h3 class="f1-l-3 cl2 p-b-16 p-t-33 respon2">
-                            {{n.name}}
+                            {{news.name}}
                         </h3>
                         
                         <div class="flex-wr-s-s p-b-40">
                             <span class="f1-s-3 cl8 m-r-15">
                                 <a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-                                    by {{n.writer}}
+                                    by {{news.writer}}
                                 </a>
 
                                 <span class="m-rl-3">-</span>
 
                                 <span>
-                                    {{n.date}}
+                                    {{news.date}}
                                 </span>
                             </span>
 
                             <span class="f1-s-3 cl8 m-r-15">
-                                {{n.show}}
+                                {{news.show}}
                             </span>
 
                             <a href="#" class="f1-s-3 cl8 hov-cl10 trans-03 m-r-15">
@@ -74,11 +74,11 @@
                         </div>
 
                         <div class="wrap-pic-max-w p-b-30">
-                            <img src="{{n.picurl}}" alt="IMG">
+                            <img src="{{news.picurl}}" alt="IMG">
                         </div>
 
                         <p style="text-align:justify" class="f1-s-11 cl6 p-b-25">
-                            {{ n.body | safe_markdown}}    
+                            {{ news.body | safe_markdown}}    
                         </p>
 
                         
@@ -90,9 +90,9 @@
                             </span>
                             
                             <div class="flex-wr-s-s size-w-0">
-                                {% for t in tags %}
-                                <a href="{% url 'list_by_tag' t %}" class="f1-s-12 cl8 hov-link1 m-r-15">
-                                    {{t.name}}
+                                {% for nt in news.tags.all %}
+                                <a href="{% url 'list_by_tag' nt %}" class="f1-s-12 cl8 hov-link1 m-r-15">
+                                    {{nt.name}}
                                 </a>
                                 {% endfor %}
                             </div>
@@ -278,7 +278,7 @@
                         </div>
 
                         <div class="flex-wr-s-s m-rl--5">
-                            {% for t in tagsAll %}
+                            {% for t in tags %}
                             <a href="{% url 'list_by_tag' t %}" class="flex-c-c size-h-2 bo-1-rad-20 bocl12 f1-s-1 cl8 hov-btn2 trans-03 p-rl-20 p-tb-5 m-all-5">
                                 {{t.name}}
                             </a>
@@ -291,6 +291,6 @@
     </div>
 </section>
 
-{% endfor %}
+
 
 {% endblock %}

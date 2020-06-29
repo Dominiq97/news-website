@@ -4,6 +4,13 @@ from martor.models import MartorField
 
 # Create your models here.
 
+class Tag(models.Model):
+	name = models.CharField(max_length=255)
+
+
+	def __str__(self):
+		return(self.name)
+
 class News(models.Model):
     name = models.CharField(max_length=50)
     summary = models.TextField()
@@ -16,6 +23,7 @@ class News(models.Model):
     category = models.CharField(max_length=50,default="-")
     category_id = models.IntegerField(default=0)
     show = models.IntegerField(default=0)
+    tags = models.ManyToManyField(Tag)
 
 
     def __str__(self):
@@ -24,9 +32,3 @@ class News(models.Model):
     class Meta:
         verbose_name_plural = 'News'
 
-class Tag(models.Model):
-	name = models.CharField(max_length=255)
-	newsTag = models.ManyToManyField(News)
-
-	def __str__(self):
-		return(self.name)
