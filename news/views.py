@@ -30,6 +30,9 @@ def news_detail(request,pk):
     site = Main.objects.get(pk=2)
     news = get_object_or_404(News,pk=pk)
     tags = Tag.objects.all()
+    for f in news.tags.all():
+        print(f.name)
+        news.tags.remove(f)
    # print(news)
     return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags})
 
@@ -77,53 +80,47 @@ def news_add(request):
         newsid = request.POST.get('newscategory')
         newstags = request.POST.get('newstags')
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
-        if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
+        if newstitle == "" or newssummary == "" or newscategory == "":
             error = "All fields required"
-            return render(request,'back/error.html',{'error':error})
-        try:
-            try:    
-                myfile = request.FILES['myfile']
-                fs = FileSystemStorage()
-                filename = fs.save(myfile.name, myfile)
-                url = fs.url(filename)
+            return render(request,'back/error.html',{'error':error})                                                            
+        try:    
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            url = fs.url(filename)
 
-                if str(myfile.content_type).startswith("image"):
-                    if (myfile.size < 5000000):
-                        newsname=SubCategory.objects.get(pk=newsid).name
-                        newstag=Tag.objects.get(pk=newstags).name
-                        news_added = News(name=newstitle, 
-                    summary=newssummary, 
-                    body=newsbody, 
-                    date=today, 
-                    time=time,
-                    picname=filename,
-                    picurl=url, 
-                    writer="-",
-                    category=newsname,
-                    category_id=newsid,
-                    show=0,
-                    tags=newstag,
-                    )
-                        news_added.save()
-                        return redirect('news_list')
-                    else:
-                        error: "Your file is bigger than 5 Mb"
-                        return render(request,'back/error.html',{'error':error})
-                
+            if str(myfile.content_type).startswith("image"):
+                if (myfile.size < 5000000):
+                    newsname=SubCategory.objects.get(pk=newsid).name
+                    news_added = News(name=newstitle, 
+                summary=newssummary, 
+                body=newsbody, 
+                date=today, 
+                time=time,
+                picname=filename,
+                picurl=url, 
+                writer="-",
+                category=newsname,
+                category_id=newsid,
+                show=0
+                )
+                    news_added.save()
+                    return redirect('news_list')
                 else:
-                    fs = FileSystemStorage()
-                    fs.delete(filename)
-                    error = "Your file not supported"
+                    error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
-
-            except:
-                fs = FileSystemStorage()
-                fs.delete(filename)
-                error = "Please input your image"+newstags
+            
+            else:
+                error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
+
         except:
-            error = "Subcategory doesn't exist"
+            fs = FileSystemStorage()
+            fs.delete(filename)
+            error = "Please input your image"
+            print(newstags, newsbody, newscategory, newsid, url, newstags, filename, newsname,time, today, myfile)
             return render(request,'back/error.html',{'error':error})
+    
     return render(request, 'back/news_add.html',context)
 
 def news_delete(request,pk):
