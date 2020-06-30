@@ -78,7 +78,7 @@ def news_add(request):
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
-        newstags = request.POST.get('newstags')
+        newstags = request.POST.getlist('newstags[]')  # UTIL CAND LUAM MULTIPLE VALUES DIN HTML 
 #       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newscategory == "":
             error = "All fields required"
@@ -105,6 +105,12 @@ def news_add(request):
                 show=0
                 )
                     news_added.save()
+                    for i in newstags:
+                        tag=Tag.objects.get(pk=i)
+                        print("    aici e printul tau ")
+                        print(tag)
+                        news_added.tags.add(tag)
+                    news_added.save()
                     return redirect('news_list')
                 else:
                     error: "Your file is bigger than 5 Mb"
@@ -114,11 +120,10 @@ def news_add(request):
                 error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
 
-        except:
+        except EnvironmentError:
             fs = FileSystemStorage()
             fs.delete(filename)
             error = "Please input your image"
-            print(newstags, newsbody, newscategory, newsid, url, newstags, filename, newsname,time, today, myfile)
             return render(request,'back/error.html',{'error':error})
     
     return render(request, 'back/news_add.html',context)
@@ -147,7 +152,6 @@ def news_edit(request,pk):
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
     form = PostForm(some_body=news.body)
-    context = {'form':form, 'title': 'Simple Form','category':category}
 
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
@@ -183,7 +187,12 @@ def news_edit(request,pk):
                         news_edited.category=newsname
                         news_edited.category_id=newsid
                         news_edited.save()
-                        return redirect('news_list')
+                        for i in newstags:
+                            tag=Tag.objects.get(pk=i)
+                            print("    aici e printul tau ")
+                            print(tag)
+                            news_added.tags.add(tag)
+                            return redirect('news_list')
                     else:
                         fs = FileSystemStorage()
                         fs.delete(filename)

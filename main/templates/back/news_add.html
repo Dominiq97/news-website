@@ -67,7 +67,7 @@
                 <div class="form-group">
                     <div class="col-md-6">
                         <label for="tags">Choose tags:</label>
-                        <select name="newstags" id="newstags" multiple>
+                        <select name="newstags[]" id="newstags" multiple="multiple">
                             {% for t in tags %}
                                 <option value="{{t.pk}}">{{t.name}}</option>
                             {% endfor %}
