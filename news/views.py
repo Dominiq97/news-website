@@ -65,8 +65,6 @@ def news_add(request):
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
-        newstags = request.POST.get('newstags')
-#       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
         if newstitle == "" or newssummary == "" or newsbody==None or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})                                                            
@@ -79,7 +77,7 @@ def news_add(request):
             if str(myfile.content_type).startswith("image"):
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
-                    counting_cat_id = SubCategory.objects.get(pk=newsid).category_id
+                    count_cat_id = SubCategory.objects.get(pk=newsid).catid
                     news_added = News(name=newstitle, 
                 summary=newssummary, 
                 body=newsbody, 
@@ -90,13 +88,14 @@ def news_add(request):
                 writer="-",
                 category=newsname,
                 category_id=newsid,
-                show=0,
-                counting_cat_id=counting_cat_id
+                count_cat_id=count_cat_id,
+                show=0
                 )
                     news_added.save()
-                    count = len(News.objects.filter(counting_cat_id=counting_cat_id))
 
-                    category_count = Category.objects.get(pk=counting_cat_id)
+                    count = len(News.objects.filter(count_cat_id=count_cat_id))
+
+                    category_count = Category.objects.get(pk=count_cat_id)
                     category_count.count = count
                     category_count.save()
                     return redirect('news_list')
@@ -109,10 +108,7 @@ def news_add(request):
                 return render(request,'back/error.html',{'error':error})
 
         except:
-            fs = FileSystemStorage()
-            fs.delete(filename)
             error = "Please input your image"
-            print(newstags, newsbody, newscategory, newsid, url, newstags, filename, newsname,time, today, myfile)
             return render(request,'back/error.html',{'error':error})
     
     return render(request, 'back/news_add.html',context)
@@ -121,7 +117,6 @@ def news_delete(request,pk):
 
     try:
         news_deleted = News.objects.get(pk=pk)
-        
         fs = FileSystemStorage()
         fs.delete(news_deleted.picname)
         news_deleted.delete()

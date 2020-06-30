@@ -15,7 +15,7 @@ class News(models.Model):
     writer = models.CharField(max_length=50)
     category = models.CharField(max_length=50,default="-")
     category_id = models.IntegerField(default=0)
-    counting_cat_id = models.IntegerField(default=0)
+    count_cat_id = models.IntegerField(default=0)
     show = models.IntegerField(default=0)
 
 
