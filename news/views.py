@@ -19,6 +19,7 @@ from subcategory.models import SubCategory
 from category.models import Category
 from news.forms import (SimpleForm, PostForm)
 from django.db.models import Q
+from .models import Tag
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
@@ -27,13 +28,20 @@ from django.views.generic import TemplateView
 
 def news_detail(request,pk):
     site = Main.objects.get(pk=2)
-    news = get_object_or_404(News, pk=pk)
-    return render(request, 'front/news_detail.html',{'site':site,'news':news})
+    news = get_object_or_404(News,pk=pk)
+    tags = Tag.objects.all()
+    return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags})
 
 def news_list(request):
     news = News.objects.all()
     return render(request, 'back/news_list.html',{'news':news})
 
+
+def search(request):
+    query = request.GET.get('q')
+    news = News.objects.filter(Q(tag__name=query))
+    tags = Tag.objects.all()  
+    return render(request,'front/search.html',{'news':news,'query':query})
 
 def news_add(request):
 
@@ -58,14 +66,17 @@ def news_add(request):
 
     category = SubCategory.objects.all()
     form = SimpleForm()
-    context = {'form': form, 'title': 'Simple Form','category':category}
+    tags = Tag.objects.all()
+    context = {'form': form, 'title': 'Simple Form','category':category,'tags':tags}
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
         newscategory = request.POST.get('newscategory')
         newssummary = request.POST.get('newssummary')
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
-        if newstitle == "" or newssummary == "" or newsbody==None or newscategory == "":
+        newstags = request.POST.getlist('newstags[]')  # UTIL CAND LUAM MULTIPLE VALUES DIN HTML 
+        
+        if newstitle == "" or newssummary == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})                                                            
         try:    
@@ -92,7 +103,12 @@ def news_add(request):
                 show=0
                 )
                     news_added.save()
-
+                    for i in newstags:
+                        tag=Tag.objects.get(pk=i)
+                        print("    aici e printul tau ")
+                        print(tag)
+                        news_added.tags.add(tag)
+                    news_added.save()
                     count = len(News.objects.filter(count_cat_id=count_cat_id))
 
                     category_count = Category.objects.get(pk=count_cat_id)
@@ -107,7 +123,9 @@ def news_add(request):
                 error = "Your file not supported"
                 return render(request,'back/error.html',{'error':error})
 
-        except:
+        except EnvironmentError:
+            fs = FileSystemStorage()
+            fs.delete(filename)
             error = "Please input your image"
             return render(request,'back/error.html',{'error':error})
     
@@ -117,6 +135,7 @@ def news_delete(request,pk):
 
     try:
         news_deleted = News.objects.get(pk=pk)
+        
         fs = FileSystemStorage()
         fs.delete(news_deleted.picname)
         news_deleted.delete()
@@ -136,7 +155,6 @@ def news_edit(request,pk):
     news = News.objects.get(pk=pk)
     category = SubCategory.objects.all()
     form = PostForm(some_body=news.body)
-    context = {'form':form, 'title': 'Simple Form','category':category}
 
     if request.method == 'POST':
         newstitle = request.POST.get('newstitle')
@@ -147,32 +165,36 @@ def news_edit(request,pk):
         if newstitle == "" or newssummary == "" or newsbody == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})
-        
-        try:    
-            myfile = request.FILES['myfile']
-            fs = FileSystemStorage()
-            filename = fs.save(myfile.name, myfile)
-            url = fs.url(filename)
+        try:
+            try:    
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                filename = fs.save(myfile.name, myfile)
+                url = fs.url(filename)
 
-            if str(myfile.content_type).startswith("image"):
+                if str(myfile.content_type).startswith("image"):
 
-                if (myfile.size < 5000000):
-                    newsname=SubCategory.objects.get(pk=newsid).name
-                    news_edited = News.objects.get(pk=pk)
+                    if (myfile.size < 5000000):
+                        newsname=SubCategory.objects.get(pk=newsid).name
+                        news_edited = News.objects.get(pk=pk)
 
-                    fss = FileSystemStorage()
-                    fss.delete(news_edited.picname)
+                        fss = FileSystemStorage()
+                        fss.delete(news_edited.picname)
 
-                    news_edited.name=newstitle
-                    news_edited.summary=newssummary
-                    news_edited.body = newsbody
-                    news_edited.picname=filename
-                    news_edited.picurl=url
-                    news_edited.writer="-"
-                    news_edited.category=newsname
-                    news_edited.category_id=newsid
-                    news_edited.save()
-                    return redirect('news_list')
+                        news_edited.name=newstitle
+                        news_edited.summary=newssummary
+                        news_edited.body = newsbody
+                        news_edited.picname=filename
+                        news_edited.picurl=url
+                        news_edited.writer="-"
+                        news_edited.category=newsname
+                        news_edited.category_id=newsid
+                        news_edited.save()
+                    else:
+                        fs = FileSystemStorage()
+                        fs.delete(filename)
+                        error: "Your file is bigger than 5 Mb"
+                        return render(request,'back/error.html',{'error':error})
                 else:
                     fs = FileSystemStorage()
                     fs.delete(filename)
@@ -239,3 +261,72 @@ def markdown_uploader(request):
         return HttpResponse(_('Invalid request!'))
     return HttpResponse(_('Invalid request!'))
 
+
+class ListNewsByTag(TemplateView):
+    template_name = 'front/search.html'
+    def get(self, request, *args, **kwargs):
+        tag_url = kwargs['tag']
+        news = News.objects.filter(tags__name=tag_url)
+        tags = Tag.objects.all()
+        return render(request, self.template_name, {'news':news,'query':tag_url,'tags':tags})
+
+
+def tags_list(request):
+    tags = Tag.objects.all()
+    return render(request,'back/tag_list.html',{'tags':tags})
+
+
+def tags_add(request):
+    if request.method =='POST':
+        tagname=request.POST.get('tagname')
+        if tagname == "":
+            error = "All fields required"
+            return render(request,'back/error.html',{'error':error})
+        if len(Tag.objects.filter(name=tagname)) != 0 :
+            error = "This Tag Used Before!"
+            return render(request,'back/error.html',{'error':error})
+        tag = Tag(name=tagname)
+        tag.save()
+        return redirect('tags_list')
+
+
+    return render(request,'back/tag_add.html')
+
+
+def tags_delete(request,pk):
+
+    try:
+        tags_deleted = Tag.objects.get(pk=pk)
+        tags_deleted.delete()
+    except:
+        error = "Something Wrong"
+        return render(request,'back/error.html',{'error':error})
+    return redirect('tags_list')
+
+
+
+def tags_edit(request,pk):
+
+    if len(Tag.objects.filter(pk=pk))==0:
+        error = "Tag does not exist!"
+        return render(request,'back/error.html',{'error':error})
+
+    tag = Tag.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        tagname = request.POST.get('tagname')
+        if tagname == "":
+            error = "All fields required"
+            return render(request,'back/error.html',{'error':error})
+        try:
+            tag_edited = Tag.objects.get(pk=pk)
+            tag_edited.name=tagname
+            tag_edited.save()
+            return redirect('tags_list')
+                    
+        except:
+            tag_edited = Tag.objects.get(pk=pk)
+            tag_edited.name=tagname
+            tag_edited.save()
+            return redirect('tags_list')
+    return render(request, 'back/tag_edit.html',{'pk':pk,'tag':tag})

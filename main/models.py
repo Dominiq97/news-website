@@ -14,6 +14,9 @@ class Main(models.Model):
 
     def __str__(self):
         return self.set_name + " | " + str(self.pk)
+
+    class Meta:
+        verbose_name_plural = 'Main Characteristics'
     
     
 

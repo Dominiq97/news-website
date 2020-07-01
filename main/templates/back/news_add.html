@@ -64,7 +64,16 @@
                     </div>
                 </div>
 
-
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label for="tags">Choose tags:</label>
+                        <select name="newstags[]" id="newstags" multiple="multiple">
+                            {% for t in tags %}
+                                <option value="{{t.pk}}">{{t.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Submit</button>
