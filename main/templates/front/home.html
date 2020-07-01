@@ -113,7 +113,7 @@
 			<!-- Item latest -->	
 			<div class="m-b-45">
 				<a href="{% url 'news_detail' pk=n.pk %}" class="wrap-pic-w hov1 trans-03">
-					<img style="width:330px;height:240px;display:inline-block" src="{{n.picurl}}" alt="IMG">
+					<img style="display:inline-block;width:330px;height:240px" src="{{n.picurl}}" alt="IMG">
 				</a>
 
 				<div class="p-t-16">
@@ -126,7 +126,7 @@
 					<p>
 						{{n.summary}}
 					</p>
-
+<br>
 					<span class="cl8">
 						<a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
 							by {{n.writer}}

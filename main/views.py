@@ -8,7 +8,7 @@ from category.models import Category
 def home(request):
  #   site_name = "News of Tech | HOME"
     site = Main.objects.get(pk=2)
-    news = News.objects.all()
+    news = News.objects.all().order_by('-pk')
     category = Category.objects.all()
     return render(request, 'front/home.html',{'site':site,'news':news,'category':category})
 

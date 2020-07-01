@@ -75,7 +75,7 @@ def news_add(request):
         newsbody = request.POST.get('body')
         newsid = request.POST.get('newscategory')
         newstags = request.POST.getlist('newstags[]')  # UTIL CAND LUAM MULTIPLE VALUES DIN HTML 
-#       print(newstitle," ",newscategory," ",newssummary," ",newsbody)
+        
         if newstitle == "" or newssummary == "" or newscategory == "":
             error = "All fields required"
             return render(request,'back/error.html',{'error':error})                                                            
@@ -88,6 +88,7 @@ def news_add(request):
             if str(myfile.content_type).startswith("image"):
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
+                    count_cat_id = SubCategory.objects.get(pk=newsid).catid
                     news_added = News(name=newstitle, 
                 summary=newssummary, 
                 body=newsbody, 
@@ -98,6 +99,7 @@ def news_add(request):
                 writer="-",
                 category=newsname,
                 category_id=newsid,
+                count_cat_id=count_cat_id,
                 show=0
                 )
                     news_added.save()
@@ -107,6 +109,11 @@ def news_add(request):
                         print(tag)
                         news_added.tags.add(tag)
                     news_added.save()
+                    count = len(News.objects.filter(count_cat_id=count_cat_id))
+
+                    category_count = Category.objects.get(pk=count_cat_id)
+                    category_count.count = count
+                    category_count.save()
                     return redirect('news_list')
                 else:
                     error: "Your file is bigger than 5 Mb"
@@ -183,39 +190,35 @@ def news_edit(request,pk):
                         news_edited.category=newsname
                         news_edited.category_id=newsid
                         news_edited.save()
-                        for i in newstags:
-                            tag=Tag.objects.get(pk=i)
-                            print("    aici e printul tau ")
-                            print(tag)
-                            news_added.tags.add(tag)
-                            return redirect('news_list')
                     else:
                         fs = FileSystemStorage()
                         fs.delete(filename)
                         error: "Your file is bigger than 5 Mb"
                         return render(request,'back/error.html',{'error':error})
-                
                 else:
                     fs = FileSystemStorage()
                     fs.delete(filename)
-                    error = "Your file not supported"
+                    error: "Your file is bigger than 5 Mb"
                     return render(request,'back/error.html',{'error':error})
+            
+            else:
+                fs = FileSystemStorage()
+                fs.delete(filename)
+                error = "Your file not supported"
+                return render(request,'back/error.html',{'error':error})
 
-            except:
-                newsname=SubCategory.objects.get(pk=newsid).name
-                news_edited = News.objects.get(pk=pk)
-
-                news_edited.name=newstitle
-                news_edited.summary=newssummary
-                news_edited.body = newsbody
-                news_edited.category=newsname
-                news_edited.category_id=newsid
-
-                news_edited.save()
-                return redirect('news_list')
         except:
-            error = "Subcategory doesn't exist"
-            return render(request,'back/error.html',{'error':error})
+            newsname=SubCategory.objects.get(pk=newsid).name
+            news_edited = News.objects.get(pk=pk)
+
+            news_edited.name=newstitle
+            news_edited.summary=newssummary
+            news_edited.body = newsbody
+            news_edited.category=newsname
+            news_edited.category_id=newsid
+
+            news_edited.save()
+            return redirect('news_list')
     return render(request, 'back/news_edit.html',{'pk':pk,'news':news,'category':category,'form': form, 'title': 'Simple Form'})
 
 
@@ -257,6 +260,7 @@ def markdown_uploader(request):
             return HttpResponse(data, content_type='application/json')
         return HttpResponse(_('Invalid request!'))
     return HttpResponse(_('Invalid request!'))
+
 
 class ListNewsByTag(TemplateView):
     template_name = 'front/search.html'
@@ -326,4 +330,3 @@ def tags_edit(request,pk):
             tag_edited.save()
             return redirect('tags_list')
     return render(request, 'back/tag_edit.html',{'pk':pk,'tag':tag})
-
