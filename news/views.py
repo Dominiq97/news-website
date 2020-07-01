@@ -30,10 +30,6 @@ def news_detail(request,pk):
     site = Main.objects.get(pk=2)
     news = get_object_or_404(News,pk=pk)
     tags = Tag.objects.all()
-    for f in news.tags.all():
-        print(f.name)
-        news.tags.remove(f)
-   # print(news)
     return render(request, 'front/news_detail.html',{'site':site,'news':news,'tags':tags})
 
 def news_list(request):
