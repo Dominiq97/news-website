@@ -175,10 +175,6 @@ def news_edit(request,pk):
                 if (myfile.size < 5000000):
                     newsname=SubCategory.objects.get(pk=newsid).name
                     news_edited = News.objects.get(pk=pk)
-
-                    fss = FileSystemStorage()
-                    fss.delete(news_edited.picname)
-
                     news_edited.name=newstitle
                     news_edited.summary=newssummary
                     news_edited.body = newsbody
@@ -188,6 +184,7 @@ def news_edit(request,pk):
                     news_edited.category=newsname
                     news_edited.category_id=newsid
                     news_edited.save()
+                    return redirect('news_list')
                 else:
                     fs = FileSystemStorage()
                     fs.delete(filename)
